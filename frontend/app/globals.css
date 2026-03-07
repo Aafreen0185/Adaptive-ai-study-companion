@@ -1,0 +1,191 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* --- Neutral foundation --- */
+    --background:    220 20% 97%;   /* warm near-white  */
+    --foreground:    222 25% 12%;   /* deep slate        */
+
+    --card:          0   0% 100%;
+    --card-foreground: 222 25% 12%;
+
+    --muted:         220 16% 93%;
+    --muted-foreground: 220 10% 48%;
+
+    --border:        220 15% 88%;
+
+    /* --- Brand --- */
+    --primary:       251 80% 62%;   /* violet            */
+    --primary-foreground: 0 0% 100%;
+
+    --accent:        160 55% 50%;   /* mint              */
+    --accent-foreground: 0 0% 100%;
+
+    /* --- Pastel accents (used for badges, tags, icons) --- */
+    --pastel-yellow: 45  90% 76%;
+    --pastel-pink:   340 75% 80%;
+    --pastel-lavender: 255 68% 84%;
+    --pastel-mint:   160 55% 80%;
+    --pastel-sky:    200 80% 80%;
+
+    /* --- Semantic --- */
+    --success:       142 60% 46%;
+    --warning:       38  92% 56%;
+    --danger:        0   72% 56%;
+
+    /* --- Sidebar --- */
+    --sidebar-w:     240px;
+    --sidebar-bg:    220 20% 97%;
+  }
+
+  .dark {
+    --background:    222 20%  9%;
+    --foreground:    220 20% 94%;
+
+    --card:          222 18% 13%;
+    --card-foreground: 220 20% 94%;
+
+    --muted:         222 16% 17%;
+    --muted-foreground: 220 10% 52%;
+
+    --border:        222 14% 20%;
+
+    --primary:       251 78% 68%;
+    --primary-foreground: 222 20% 9%;
+
+    --accent:        160 55% 55%;
+    --accent-foreground: 222 20% 9%;
+
+    --pastel-yellow: 45  55% 32%;
+    --pastel-pink:   340 50% 34%;
+    --pastel-lavender: 255 52% 36%;
+    --pastel-mint:   160 42% 30%;
+    --pastel-sky:    200 55% 32%;
+
+    --success:       142 55% 42%;
+    --warning:       38  80% 48%;
+    --danger:        0   65% 50%;
+
+    --sidebar-bg:    222 20% 9%;
+  }
+}
+
+/* ---- Reset & base ---- */
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-background text-foreground;
+  font-family: var(--font-sans), 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+/* ---- Custom scrollbar ---- */
+::-webkit-scrollbar          { width: 6px; height: 6px; }
+::-webkit-scrollbar-track    { background: transparent; }
+::-webkit-scrollbar-thumb    { background: hsl(var(--border)); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: hsl(var(--muted-foreground) / 0.5); }
+
+/* ---- Focus ring ---- */
+:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+}
+
+@layer components {
+  /* ---------- Aurora background ---------- */
+  .bg-aurora {
+    background-image:
+      radial-gradient(ellipse 80% 60% at 10%  8%,  hsl(var(--pastel-yellow) / 0.30) 0%, transparent 60%),
+      radial-gradient(ellipse 70% 55% at 90% 12%,  hsl(var(--pastel-sky)    / 0.25) 0%, transparent 55%),
+      radial-gradient(ellipse 75% 55% at 45% 95%,  hsl(var(--pastel-lavender)/ 0.20) 0%, transparent 60%);
+    background-color: hsl(var(--background));
+  }
+
+  /* ---------- Card elevation system ---------- */
+  /*  level-1: resting (no shadow)  */
+  .card-base {
+    @apply rounded-2xl border border-border bg-card;
+  }
+  /*  level-2: subtle lift  */
+  .card-raised {
+    @apply card-base;
+    box-shadow: 0 2px 8px -2px rgba(0,0,0,.06), 0 4px 16px -4px rgba(0,0,0,.06);
+  }
+  /*  level-3: interactive hover  */
+  .card-interactive {
+    @apply card-raised transition-all duration-200 hover:-translate-y-0.5;
+    box-shadow: 0 2px 8px -2px rgba(0,0,0,.06), 0 4px 16px -4px rgba(0,0,0,.06);
+  }
+  .card-interactive:hover {
+    box-shadow: 0 4px 12px -2px rgba(0,0,0,.10), 0 8px 24px -4px rgba(0,0,0,.08);
+  }
+
+  /* ---------- Glass nav (mobile bottom bar) ---------- */
+  .glass-nav {
+    background: hsl(var(--card) / 0.85);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid hsl(var(--border) / 0.8);
+    box-shadow: 0 -4px 24px -4px rgba(0,0,0,.08);
+  }
+
+  /* ---------- Sidebar glass ---------- */
+  .sidebar-glass {
+    background: hsl(var(--sidebar-bg));
+    border-right: 1px solid hsl(var(--border));
+  }
+
+  /* ---------- Pressable interaction ---------- */
+  .pressable {
+    @apply transition-all duration-150 active:scale-[0.97];
+  }
+
+  /* ---------- Progress bar track  ---------- */
+  .progress-track {
+    @apply h-2 w-full rounded-full bg-muted overflow-hidden;
+  }
+  .progress-fill {
+    @apply h-full rounded-full transition-all duration-700 ease-out;
+  }
+
+  /* ---------- Badge chip ---------- */
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold;
+  }
+
+  /* ---------- Input base ---------- */
+  .input-base {
+    @apply h-11 w-full rounded-xl border border-border bg-card px-4 py-2 text-sm
+           placeholder:text-muted-foreground
+           focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20
+           transition-all duration-200;
+  }
+
+  /* ---------- Shimmer loading ---------- */
+  @keyframes shimmer {
+    0%   { background-position: -200% 0; }
+    100% { background-position:  200% 0; }
+  }
+  .shimmer {
+    background: linear-gradient(90deg,
+      hsl(var(--muted)) 25%,
+      hsl(var(--card))  50%,
+      hsl(var(--muted)) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.4s infinite;
+  }
+
+  /* ---------- XP bar glow ---------- */
+  .xp-glow {
+    box-shadow: 0 0 12px hsl(var(--primary) / 0.45);
+  }
+}
