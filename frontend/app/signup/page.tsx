@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { BookOpen, GraduationCap, Users, ArrowRight, Check } from "lucide-react";
+import { BookOpen, GraduationCap, Users, ArrowRight, Check, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { setUserRole, setUserName, type UserRole } from "@/lib/auth";
@@ -13,8 +13,13 @@ export default function SignupPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+
+  const nameError = submitted && !name.trim() ? "Please enter your full name" : "";
+  const roleError = submitted && !role ? "Please select a role to continue" : "";
 
   const handleSignup = () => {
+    setSubmitted(true);
     if (!role || !name.trim()) return;
     setUserRole(role);
     setUserName(name.trim());
@@ -36,7 +41,10 @@ export default function SignupPage() {
         </div>
 
         {/* Form */}
-        <div className="card-raised p-6 space-y-6">
+        <form
+          className="card-raised p-6 space-y-6"
+          onSubmit={e => { e.preventDefault(); handleSignup(); }}
+        >
           {/* Role Selection */}
           <div className="space-y-2.5">
             <label className="text-sm font-medium text-foreground">I am a</label>
@@ -86,6 +94,11 @@ export default function SignupPage() {
                 </div>
               </button>
             </div>
+            {roleError && (
+              <p className="flex items-center gap-1.5 text-xs text-danger">
+                <AlertCircle className="h-3.5 w-3.5 shrink-0" />{roleError}
+              </p>
+            )}
           </div>
 
           <div className="space-y-1.5">
@@ -94,10 +107,15 @@ export default function SignupPage() {
               id="name"
               type="text"
               placeholder="Alex Johnson"
-              className="input-base"
+              className={`input-base ${nameError ? "border-danger focus:ring-danger/30" : ""}`}
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={e => { setName(e.target.value); }}
             />
+            {nameError && (
+              <p className="flex items-center gap-1.5 text-xs text-danger">
+                <AlertCircle className="h-3.5 w-3.5 shrink-0" />{nameError}
+              </p>
+            )}
           </div>
           <div className="space-y-1.5">
             <label className="text-sm font-medium text-foreground" htmlFor="email">Email</label>
@@ -122,9 +140,8 @@ export default function SignupPage() {
             />
           </div>
           <Button
+            type="submit"
             className="w-full gap-2"
-            onClick={handleSignup}
-            disabled={!role || !name.trim()}
           >
             Create account <ArrowRight className="h-4 w-4" />
           </Button>
@@ -132,7 +149,7 @@ export default function SignupPage() {
             By signing up you agree to our{" "}
             <Link href="#" className="text-primary hover:underline">Terms of Service</Link>
           </p>
-        </div>
+        </form>
 
         <p className="text-center text-sm text-muted-foreground">
           Already have an account?{" "}

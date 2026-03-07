@@ -104,25 +104,22 @@ export default function AnalyticsPage() {
             <h2 className="text-sm font-semibold text-foreground">Study Time — This Week</h2>
             <span className="text-sm font-bold text-primary">{totalHours}h total</span>
           </div>
-          <div className="flex items-end gap-2 h-40">
-            {WEEK_DATA.map(({ day, hours }) => {
+          <div className="flex items-end gap-2">
+            {WEEK_DATA.map(({ day, hours }, idx) => {
               const pct = (hours / maxHours) * 100;
               return (
-                <div key={day} className="flex flex-1 flex-col items-center gap-2">
-                  <motion.div
-                    className="w-full rounded-t-lg bg-primary/20 relative overflow-hidden"
-                    style={{ height: "100%" }}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                  >
+                <div key={day} className="flex flex-1 flex-col items-center gap-1.5">
+                  {/* bar track — explicit pixel height so % animations work */}
+                  <div className="relative w-full rounded-t-lg bg-primary/15 overflow-hidden" style={{ height: 128 }}>
                     <motion.div
                       className="absolute bottom-0 left-0 right-0 rounded-t-lg bg-primary"
                       initial={{ height: 0 }}
                       animate={{ height: `${pct}%` }}
-                      transition={{ duration: 0.7, delay: 0.05 * WEEK_DATA.findIndex(d => d.day === day), ease: "easeOut" }}
+                      transition={{ duration: 0.7, delay: 0.06 * idx, ease: "easeOut" }}
                     />
-                  </motion.div>
+                  </div>
                   <span className="text-[11px] text-muted-foreground font-medium">{day}</span>
+                  <span className="text-[10px] text-primary font-semibold">{hours}h</span>
                 </div>
               );
             })}
